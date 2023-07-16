@@ -1,4 +1,5 @@
--- Conditional crafting recipe based on mod dependencies
+local functions = dofile(modpath .. "/functions.lua")
+
 local has_default_mod = minetest.get_modpath("default")
 local has_mcl_core_mod = minetest.get_modpath("mcl_core")
 
@@ -15,9 +16,9 @@ elseif has_mcl_core_mod then
     minetest.register_craft({
         output = "inventory_pouches:pouch",
         recipe = {
-            {"mcl_mobitems:string", "mcl_mobitems:string", "mcl_mobitems:string"},
-            {"mcl_mobitems:string", "mcl_chests:chest", "mcl_mobitems:string"},
-            {"mcl_mobitems:string", "mcl_mobitems:string", "mcl_mobitems:string"},
+            {"mcl_core:string", "mcl_core:string", "mcl_core:string"},
+            {"mcl_core:string", "mcl_chests:chest", "mcl_core:string"},
+            {"mcl_core:string", "mcl_core:string", "mcl_core:string"},
         }
     })
 end

@@ -1,49 +1,60 @@
-local pouch_size = 27
+functions = {}
 
-local function inventory_to_table(inv, listname)
-    local list = inv:get_list(listname)
-    local table_list = {}
-    for i, item in ipairs(list) do
-        table_list[i] = item:to_string()
+local inventories = {}
+local storage = minetest.get_mod_storage()
+
+local function inventory_to_table(inv)
+    local inv_table = {}
+    for i, stack in ipairs(inv:get_list("main")) do
+        inv_table[i] = stack:to_table()
     end
-    return table_list
+    return inv_table
 end
 
-local function table_to_inventory(inv, listname, table_list)
-    local list = {}
-    for i, item_string in ipairs(table_list) do
-        list[i] = ItemStack(item_string)
+local function table_to_inventory(inv_table, inv)
+    for i, stack_table in ipairs(inv_table) do
+        inv:set_stack("main", i, ItemStack(stack_table))
     end
-    inv:set_list(listname, list)
 end
 
-local function update_inventory(player, itemstack)
-    local pname = player:get_player_name()
-    local inv = minetest.get_inventory({type = "detached", name = "pouch_inventory_" .. pname})
+function functions.get_next_id()
+    local highest_id = tonumber(storage:get_string("highest_id")) or 0
+    highest_id = highest_id + 1
+    storage:set_string("highest_id", tostring(highest_id))
+    return highest_id
+end
+
+function functions.update_inventory(itemstack)
+    local id = itemstack:get_meta():get_string("id")
+    local inv = inventories[id]
     if inv then
-        local meta = player:get_meta()
-        local items = inventory_to_table(inv, "main")
-        meta:set_string("inventory_pouches:items", minetest.serialize(items))
+        local inv_table = inventory_to_table(inv)
+        storage:set_string("pouch_" .. id, minetest.serialize(inv_table))
     end
 end
 
-local function restore_inventory(player, itemstack)
-    local pname = player:get_player_name()
-    local inv = minetest.get_inventory({type = "detached", name = "pouch_inventory_" .. pname})
-    if inv then
-        local meta = player:get_meta()
-        local items_str = meta:get_string("inventory_pouches:items")
-        local items = minetest.deserialize(items_str)
-        if items then
-            table_to_inventory(inv, "main", items)
+function functions.restore_inventory(itemstack, inv)
+    local id = itemstack:get_meta():get_string("id")
+    local inv_table_string = storage:get_string("pouch_" .. id)
+    if inv_table_string ~= "" then
+        local inv_table = minetest.deserialize(inv_table_string)
+        table_to_inventory(inv_table, inv)
+    end
+end
+
+function functions.create_pouch_inventory(itemstack)
+    local id = itemstack:get_meta():get_string("id")
+    local inv = minetest.create_detached_inventory("pouch_inventory_" .. id, {
+        on_put = function(inv)
+            functions.update_inventory(itemstack)
+        end,
+        on_take = function(inv)
+            functions.update_inventory(itemstack)
         end
-    end
+    })
+    inv:set_size("main", 16)
+    inventories[id] = inv
+    functions.restore_inventory(itemstack, inv)
+    functions.update_inventory(itemstack)  -- update inventory immediately after restore
+    return inv
 end
-
-return {
-    inventory_to_table = inventory_to_table,
-    table_to_inventory = table_to_inventory,
-    update_inventory = update_inventory,
-    restore_inventory = restore_inventory,
-    pouch_size = pouch_size,
-}

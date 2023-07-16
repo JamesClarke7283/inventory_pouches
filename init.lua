@@ -1,4 +1,3 @@
--- You'll need to replace `<modname>` with the name of your mod
 modname = "inventory_pouches"
 modpath = minetest.get_modpath(modname)
 
