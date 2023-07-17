@@ -2,7 +2,6 @@ functions = {}
 
 inventory_size = 27
 local inventories = {}
-local storage = minetest.get_mod_storage()
 
 local function inventory_to_table(inv)
     minetest.log("action", "[inventory_pouches] Entering function inventory_to_table")
