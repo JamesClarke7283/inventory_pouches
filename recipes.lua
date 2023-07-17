@@ -16,9 +16,10 @@ elseif has_mcl_core_mod then
     minetest.register_craft({
         output = "inventory_pouches:pouch",
         recipe = {
-            {"mcl_core:string", "mcl_core:string", "mcl_core:string"},
-            {"mcl_core:string", "mcl_chests:chest", "mcl_core:string"},
-            {"mcl_core:string", "mcl_core:string", "mcl_core:string"},
+            {"mcl_mobitems:string", "mcl_mobitems:string", "mcl_mobitems:string"},
+            {"mcl_mobitems:string", "mcl_chests:chest", "mcl_mobitems:string"},
+            {"mcl_mobitems:string", "mcl_mobitems:string", "mcl_mobitems:string"},
         }
     })
 end
+
