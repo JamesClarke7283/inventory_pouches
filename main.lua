@@ -23,16 +23,34 @@ minetest.register_craftitem("inventory_pouches:pouch", {
         "listring[current_player;main]"
 
         minetest.show_formspec(user:get_player_name(), "inventory_pouches:pouch" .. id, formspec)
+        minetest.log("action", "[inventory_pouches] Opened pouch inventory with ID: " .. id)
         return itemstack
     end,
 })
 
 minetest.register_on_player_receive_fields(function(player, formname, fields)
-    if formname == "inventory_pouches:pouch" and fields.quit then
+    local id = string.match(formname, "^inventory_pouches:pouch(%d+)")
+    if id and fields.quit then
+        local inv_list = player:get_inventory():get_list("main")
+        for i, itemstack in ipairs(inv_list) do
+            if itemstack:get_name() == "inventory_pouches:pouch" then
+                local meta = itemstack:get_meta()
+                if meta:get_string("id") == id then
+                    functions.update_inventory(itemstack)
+                end
+            end
+        end
+    end
+end)
+
+minetest.register_on_shutdown(function()
+    minetest.log("action", "[inventory_pouches] Server is shutting down. Updating all pouch inventories.")
+    for _, player in ipairs(minetest.get_connected_players()) do
         local inv_list = player:get_inventory():get_list("main")
         for i, itemstack in ipairs(inv_list) do
             if itemstack:get_name() == "inventory_pouches:pouch" then
                 functions.update_inventory(itemstack)
+                minetest.log("action", "[inventory_pouches] Updated inventory for pouch with ID: " .. itemstack:get_meta():get_string("id"))
             end
         end
     end
