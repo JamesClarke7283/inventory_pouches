@@ -1,5 +1,6 @@
 functions = {}
 
+inventory_size = 27
 local inventories = {}
 local storage = minetest.get_mod_storage()
 
@@ -67,7 +68,7 @@ function functions.create_pouch_inventory(itemstack)
                 functions.update_inventory(itemstack)
             end
         })
-        inv:set_size("main", 16)
+        inv:set_size("main", inventory_size)  -- Adjusted inventory size here
         inventories[id] = inv
         functions.restore_inventory(itemstack, inv)
         functions.update_inventory(itemstack)
@@ -77,6 +78,7 @@ function functions.create_pouch_inventory(itemstack)
     end
     return inv
 end
+
 
 function functions.restore_all_pouches()
     local highest_id = tonumber(storage:get_string("highest_id")) or 0
@@ -95,7 +97,7 @@ function functions.restore_all_pouches()
                     functions.update_inventory(itemstack)
                 end
             })
-            inv:set_size("main", 16)
+            inv:set_size("main", inventory_size)  -- Adjusted inventory size here
             inventories[id] = inv
             local inv_table = minetest.deserialize(inv_table_string)
             table_to_inventory(inv_table, inv)
@@ -103,3 +105,4 @@ function functions.restore_all_pouches()
         end
     end
 end
+
