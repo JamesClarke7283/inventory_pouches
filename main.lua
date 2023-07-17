@@ -5,7 +5,6 @@ minetest.register_craftitem("inventory_pouches:pouch", {
     inventory_image = "inventory_pouches_pouch.png",
     stack_max = 1,
     on_use = function(itemstack, user, pointed_thing)
-        minetest.log("action", "[inventory_pouches] Entering function on_use")
         local meta = itemstack:get_meta()
         local id = meta:get_string("id")
         if id == "" then
@@ -25,13 +24,11 @@ minetest.register_craftitem("inventory_pouches:pouch", {
 
         minetest.show_formspec(user:get_player_name(), "inventory_pouches:pouch" .. id, formspec)
         minetest.log("action", "[inventory_pouches] Opened pouch inventory with ID: " .. id)
-        minetest.log("action", "[inventory_pouches] Exiting function on_use")
         return itemstack
     end,
 })
 
 minetest.register_on_player_receive_fields(function(player, formname, fields)
-    minetest.log("action", "[inventory_pouches] Entering function register_on_player_receive_fields")
     local id = string.match(formname, "^inventory_pouches:pouch(%d+)")
     if id and fields.quit then
         local inv_list = player:get_inventory():get_list("main")
@@ -46,11 +43,9 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
             end
         end
     end
-    minetest.log("action", "[inventory_pouches] Exiting function register_on_player_receive_fields")
 end)
 
 minetest.register_on_shutdown(function()
-    minetest.log("action", "[inventory_pouches] Entering function register_on_shutdown")
     for _, player in ipairs(minetest.get_connected_players()) do
         local inv_list = player:get_inventory():get_list("main")
         for i, itemstack in ipairs(inv_list) do
@@ -60,7 +55,6 @@ minetest.register_on_shutdown(function()
             end
         end
     end
-    minetest.log("action", "[inventory_pouches] Exiting function register_on_shutdown")
 end)
 
 functions.restore_all_pouches()
