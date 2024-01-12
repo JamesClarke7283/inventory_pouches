@@ -52,12 +52,34 @@ function inventory_pouches.restore_inventory(itemstack, inv)
     end
 end
 
+-- Define a reusable check function
+function inventory_pouches.allow_put(inv, listname, index, stack, player)
+    -- Get the currently wielded item
+    local wielded_item = player:get_wielded_item()
+    local wielded_meta = wielded_item:get_meta()
+    local wielded_id = wielded_meta:get_string("id")
+
+    -- Check if the item being placed is a pouch and if it matches the ID of the wielded item
+    if string.find(stack:get_name(), "^inventory_pouches:") then
+        local stack_meta = stack:get_meta()
+        local stack_id = stack_meta:get_string("id")
+        if wielded_id == stack_id then
+            -- Disallow placing the same pouch inside itself
+            return 0 -- Disallow the put action
+        end
+    end
+    -- Allow other items to be put in the inventory
+    return stack:get_count()
+end
+
+
 function inventory_pouches.create_pouch_inventory(itemstack)
     local meta = itemstack:get_meta()
     local id = meta:get_string("id")
     local inv = inventory_pouches.inventories[id]
     if not inv then
         inv = minetest.create_detached_inventory("pouch_inventory_" .. id, {
+            allow_put  = inventory_pouches.allow_put,
             on_put = function(inv)
                 inventory_pouches.update_inventory(itemstack)
             end,
@@ -83,6 +105,7 @@ function inventory_pouches.restore_all_pouches()
         local inv_table_string = inventory_pouches.storage:get_string("pouch_" .. id)
         if inv_table_string ~= "" then
             local inv = minetest.create_detached_inventory("pouch_inventory_" .. id, {
+                allow_put = inventory_pouches.allow_put,
                 on_put = function(inv)
                     local itemstack = ItemStack("inventory_pouches:pouch")
                     itemstack:get_meta():set_string("id", tostring(id))
