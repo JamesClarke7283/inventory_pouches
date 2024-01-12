@@ -11,6 +11,9 @@ read_globals = {
     -- My mod
     "inventory_pouches",
 
+    -- Unified Dyes
+    "unifieddyes",
+
     -- Builtin
     "vector", "ItemStack",
     "dump", "DIR_DELIM", "VoxelArea", "Settings",
@@ -46,5 +49,5 @@ read_globals = {
           "mcl_formspec", "mcl_death_messages", "mcl_bossbars", "awards",
           "mcl_inventory", "mcl_title", "mcl_offhand", "hb", "mcl_experience",
           "mcl_info", "mcl_credits", "tsm_railcorridors", "mcl_mapgen_core",
-          "mcl_structures", "settlements", "mcl_dungeons"
+          "mcl_structures", "settlements", "mcl_dungeons", "mcl_colors_official"
 }

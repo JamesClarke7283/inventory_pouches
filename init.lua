@@ -14,5 +14,6 @@ dofile(inventory_pouches.modpath .. inventory_pouches.src_dir .. "functions.lua"
 dofile(inventory_pouches.modpath .. inventory_pouches.src_dir .. "formspecs.lua")
 dofile(inventory_pouches.modpath .. inventory_pouches.src_dir .. "recipes.lua")
 dofile(inventory_pouches.modpath .. inventory_pouches.src_dir .. "main.lua")
+dofile(inventory_pouches.modpath .. inventory_pouches.src_dir .. "coloured.lua")
 
 inventory_pouches.restore_all_pouches()

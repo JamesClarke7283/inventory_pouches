@@ -1,4 +1,3 @@
-
 if inventory_pouches.has_default then
     minetest.register_craft({
         output = "inventory_pouches:pouch",

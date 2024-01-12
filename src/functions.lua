@@ -35,7 +35,8 @@ function inventory_pouches.update_inventory(itemstack)
     if inv then
         local inv_table = inventory_to_table(inv)
         local inv_string = minetest.serialize(inv_table)
-        minetest.log("verbose", "[inventory_pouches] Updated inventory string: " .. inv_string .. " for pouch with ID: " .. id)
+        minetest.log("verbose", "[inventory_pouches] Updated inventory string: " .. inv_string .. " for pouch with ID: "
+        .. id)
         meta:set_string("inventory", inv_string)
         inventory_pouches.storage:set_string("pouch_" .. id, inv_string)
     end

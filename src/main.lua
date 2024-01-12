@@ -40,6 +40,14 @@ minetest.register_craftitem("inventory_pouches:pouch", {
     on_secondary_use = inventory_pouches.invoke
 })
 
+if minetest.get_modpath("unifieddyes") then
+    minetest.override_item("inventory_pouches:pouch", {
+        palette = "unifieddyes_palette_extended.png",
+        groups = {ud_param2_colorable = 1},
+    })
+end
+
+
 minetest.register_on_player_receive_fields(function(player, formname, fields)
     local id = string.match(formname, "^inventory_pouches:pouch(%d+)")
     if id and fields.quit then
