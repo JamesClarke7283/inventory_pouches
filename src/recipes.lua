@@ -1,5 +1,3 @@
-inventory_pouches.has_default = minetest.get_modpath("default")
-inventory_pouches.has_mcl = minetest.get_modpath("mcl_core")
 
 if inventory_pouches.has_default then
     minetest.register_craft({
@@ -10,7 +8,7 @@ if inventory_pouches.has_default then
             {"default:string", "default:string", "default:string"},
         }
     })
-elseif inventory_pouches.has_mcl then
+elseif inventory_pouches.has_mcl_mobitems and inventory_pouches.has_mcl_chests then
     minetest.register_craft({
         output = "inventory_pouches:pouch",
         recipe = {
