@@ -1,4 +1,5 @@
 Code:
+Copyright James Clarke <james@jamesdavidclarke.com>
 
                     GNU GENERAL PUBLIC LICENSE
                        Version 3, 29 June 2007
@@ -678,8 +679,7 @@ Public License instead of this License.  But first, please read
 
 Textures:
 ---------
-CC BY-SA 3.0
-https://creativecommons.org/licenses/by-sa/3.0/legalcode
+Copyright James Clarke <james@jamesdavidclarke.com>
 
-The inventory pouch texture is taken from i3:
-https://github.com/minetest-mods/i3/blob/main/textures/i3_bag_hover.png
+CC BY-SA 4.0
+https://creativecommons.org/licenses/by-sa/4.0/legalcode.en
