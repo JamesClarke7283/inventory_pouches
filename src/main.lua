@@ -28,7 +28,7 @@ function inventory_pouches.invoke(itemstack, user, pointed_thing)
     local inv = inventory_pouches.create_pouch_inventory(itemstack)
 
     minetest.show_formspec(user:get_player_name(), "inventory_pouches:pouch" .. id, inventory_pouches.formspec.standard_pouch(id))
-    minetest.log("action", "[inventory_pouches] Opened pouch inventory with ID: " .. id)
+    minetest.log("info", "[inventory_pouches] '".. user:get_player_name() .."' Opened pouch inventory with ID: " .. id)
     return itemstack
 end
 

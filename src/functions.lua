@@ -1,5 +1,5 @@
 inventory_size = 27
-local inventories = {}
+inventory_pouches.inventories = {}
 
 local function inventory_to_table(inv)
     minetest.log("verbose", "[inventory_pouches] Entering function inventory_to_table")
@@ -8,7 +8,7 @@ local function inventory_to_table(inv)
         local stack_table = stack:to_table()
         if stack_table then  -- Only add to inv_table if stack_table is not nil
             inv_table[i] = stack_table
-            minetest.log("action", "[inventory_pouches] Added stack to table: " .. minetest.serialize(inv_table[i]))
+            minetest.log("verbose", "[inventory_pouches] Added stack to table: " .. minetest.serialize(inv_table[i]))
         end
     end
     return inv_table
@@ -31,7 +31,7 @@ end
 function inventory_pouches.update_inventory(itemstack)
     local meta = itemstack:get_meta()
     local id = meta:get_string("id")
-    local inv = inventories[id]
+    local inv = inventory_pouches.inventories[id]
     if inv then
         local inv_table = inventory_to_table(inv)
         local inv_string = minetest.serialize(inv_table)
@@ -55,7 +55,7 @@ end
 function inventory_pouches.create_pouch_inventory(itemstack)
     local meta = itemstack:get_meta()
     local id = meta:get_string("id")
-    local inv = inventories[id]
+    local inv = inventory_pouches.inventories[id]
     if not inv then
         inv = minetest.create_detached_inventory("pouch_inventory_" .. id, {
             on_put = function(inv)
@@ -66,7 +66,7 @@ function inventory_pouches.create_pouch_inventory(itemstack)
             end
         })
         inv:set_size("main", inventory_size)  -- Adjusted inventory size here
-        inventories[id] = inv
+        inventory_pouches.inventories[id] = inv
         inventory_pouches.restore_inventory(itemstack, inv)
         inventory_pouches.update_inventory(itemstack)
         minetest.log("info", "[inventory_pouches] Created new pouch inventory with ID: " .. id)
@@ -95,7 +95,7 @@ function inventory_pouches.restore_all_pouches()
                 end
             })
             inv:set_size("main", inventory_size)  -- Adjusted inventory size here
-            inventories[id] = inv
+            inventory_pouches.inventories[id] = inv
             local inv_table = minetest.deserialize(inv_table_string)
             table_to_inventory(inv_table, inv)
             minetest.log("verbose", "[inventory_pouches] Restored pouch inventory with ID: " .. id)
