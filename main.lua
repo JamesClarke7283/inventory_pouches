@@ -1,5 +1,23 @@
 dofile(minetest.get_modpath("inventory_pouches") .. "/functions.lua")
 
+-- Adds periodic save so when it crashes there are still some items existing.
+local save_interval = 60 -- seconds
+
+local function periodic_save()
+    for _, player in ipairs(minetest.get_connected_players()) do
+        local inv_list = player:get_inventory():get_list("main")
+        for _, itemstack in ipairs(inv_list) do
+            if itemstack:get_name() == "inventory_pouches:pouch" then
+                functions.update_inventory(itemstack)
+            end
+        end
+    end
+    minetest.after(save_interval, periodic_save)
+end
+
+minetest.after(save_interval, periodic_save)
+
+
 minetest.register_craftitem("inventory_pouches:pouch", {
     description = "Inventory Pouch",
     inventory_image = "inventory_pouches_pouch.png",
@@ -57,4 +75,6 @@ minetest.register_on_shutdown(function()
     end
 end)
 
+minetest.register_on_mods_loaded(function()
 functions.restore_all_pouches()
+end)
