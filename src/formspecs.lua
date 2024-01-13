@@ -20,16 +20,18 @@ function inventory_pouches.formspec.standard_pouch(id)
     local hotbar = "list[current_player;main;" .. padding_x .. "," .. hotbar_start_y .. ";" .. cols .. ",1;0]"
 
     if inventory_pouches.has_mcl_formspec then
+      formspec_height = hotbar_start_y + 1.5 -- Add more space for the hotbar
+        formspec_width = cols + 1.5 -- Add more width for MineClone2 styling
         formspec = {
             "formspec_version[4]",
-            "size[11.75,10.5]",  -- Adjusted size for mineclone2
+            "size[11.75," .. formspec_height .. "]", -- Adjusted size for MineClone2
             "label[0.375,0.375;" .. minetest.formspec_escape(minetest.colorize("#313131", "Inventory Pouch")) .. "]",
-            mcl_formspec.get_itemslot_bg_v4(0.375, 1, cols, rows),
-            "list[detached:pouch_inventory_" .. id .. ";main;0.375,1;"..cols..","..rows..";]",
-            mcl_formspec.get_itemslot_bg_v4(0.375, hotbar_start, player_inv_cols, 3),
-            "list[current_player;main;0.375,"..hotbar_start..";"..player_inv_cols..",3;9]",
-            mcl_formspec.get_itemslot_bg_v4(0.375, hotbar_start + 3.24, player_inv_cols, 1),
-            "list[current_player;main;0.375,"..(hotbar_start + 3.24)..";"..player_inv_cols..",1;]",
+            mcl_formspec.get_itemslot_bg_v4(0.375, 0.75, cols, rows),
+            pouch_inv,
+            mcl_formspec.get_itemslot_bg_v4(0.375, player_inv_start_y, cols, 3),
+            player_inv,
+            mcl_formspec.get_itemslot_bg_v4(0.375, hotbar_start_y, cols, 1),
+            hotbar,
             "listring[detached:pouch_inventory_" .. id .. ";main]",
             "listring[current_player;main]",
         }
