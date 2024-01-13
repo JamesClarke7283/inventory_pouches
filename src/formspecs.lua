@@ -5,23 +5,19 @@ function inventory_pouches.formspec.standard_pouch(id)
     local inv_size = inventory_pouches.inventory_size
     local cols = inventory_pouches.has_mcl_formspec and 9 or 8 -- 9 for mineclone2, 8 for minetest_game
     local rows = math.ceil(inv_size / cols)
-    local player_inv_cols = inventory_pouches.has_mcl_formspec and 9 or 8
-    local hotbar_start = inventory_pouches.has_mcl_formspec and rows * 1.5 or rows + 3.74
+    local formspec_width = cols * 1.30 -- Width of the formspec
+    local formspec_height = rows + 7.5 -- Height of the formspec
 
-    local player_inv_cols = cols
-    local pouch_inv_height = rows * 1.1 -- Assuming each row is approximately 1 unit high, with a little extra space
-    local player_inv_start = pouch_inv_height + 0.75 -- Increase the space between the pouch inventory and player inventory
-    local hotbar_start = player_inv_start + 3 * 1.1 -- Assuming each row is approximately 1 unit high, with a little extra space
-    local formspec_height = hotbar_start + 1.1 -- Height of hotbar, assuming it's 1 unit high
-    local formspec_width = cols * 1.15 -- Increase if you need more space on the sides
+    local padding_x = 0.375 -- Horizontal padding for alignment
+    local pouch_inv_start_y = 1 -- Starting point of the pouch inventory on the Y-axis
+    local gap = 0.75 -- Gap between the pouch and player inventories
+    local player_inv_start_y = pouch_inv_start_y + (rows * 1.1) + gap -- Starting point of the player inventory on the Y-axis
+    local hotbar_start_y = player_inv_start_y + 3 + gap + 0.20 -- Starting point of the hotbar on the Y-axis
 
-    -- Adjust the horizontal padding for the pouch inventory
-    local pouch_inv_x = 0.375
-
-    -- Adjust the horizontal padding for the player inventory and hotbar to align with the pouch inventory
-    local player_inv_x = pouch_inv_x
-
-
+    -- Define the formspec elements for the pouch inventory, player inventory, and hotbar
+    local pouch_inv = "list[detached:pouch_inventory_" .. id .. ";main;" .. padding_x .. "," .. pouch_inv_start_y .. ";" .. cols .. "," .. rows .. ";]"
+    local player_inv = "list[current_player;main;" .. padding_x .. "," .. player_inv_start_y .. ";" .. cols .. ",3;"..cols.."]"
+    local hotbar = "list[current_player;main;" .. padding_x .. "," .. hotbar_start_y .. ";" .. cols .. ",1;0]"
 
     if inventory_pouches.has_mcl_formspec then
         formspec = {
@@ -39,15 +35,16 @@ function inventory_pouches.formspec.standard_pouch(id)
         }
     else  -- minetest_game formspec
       formspec = {
-            "size[" .. formspec_width .. "," .. formspec_height .. "]",
-            "label[0.375,0.375;" .. minetest.formspec_escape(minetest.colorize("#313131", "Inventory Pouch")) .. "]",
-            "listcolors[#AAAAAA;#888888;#FFFFFF]",
-"list[detached:pouch_inventory_" .. id .. ";main;" .. pouch_inv_x .. ",1;" .. cols .. "," .. rows .. ";]",
-"list[current_player;main;" .. player_inv_x .. "," .. player_inv_start .. ";" .. player_inv_cols .. ",3;9]",
-"list[current_player;main;" .. player_inv_x .. "," .. hotbar_start .. ";" .. player_inv_cols .. ",1;0]",
-"listring[detached:pouch_inventory_" .. id .. ";main]",
-"listring[current_player;main]",
-}
+        "formspec_version[3]",
+        "size[" .. formspec_width .. "," .. formspec_height .. "]",
+        "label[" .. padding_x .. ",0.5;Inventory Pouch]",
+        "listcolors[#AAAAAA;#888888;#FFFFFF;#333333;#BBBBBB]",
+        pouch_inv,
+        player_inv,
+        hotbar,
+        "listring[detached:pouch_inventory" .. id .. ";main]",
+        "listring[current_player;main]",
+      }
     end
     return table.concat(formspec)
 end
