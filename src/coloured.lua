@@ -22,22 +22,21 @@ inventory_pouches.dye_color_pairs = {
 {"mcl_dye:white",mcl_colors.WHITE},
 {"mcl_dye:yellow",mcl_colors.YELLOW},
 }
-minetest.log("action","Dye Colour table inside if statement: "..minetest.serialize(inventory_pouches.dye_color_pairs))
 end
-
-minetest.log("action","Dye Colour table: "..minetest.serialize(inventory_pouches.dye_color_pairs))
 
 
 -- This function is called after the pouch is crafted with a dye.
--- Function to handle crafting of colored pouches
 local function craft_colored_pouch(itemstack, player, old_craft_grid, craft_inv)
     local pouch, dye, dye_stack_index
 
     -- Find the pouch and dye in the crafting grid
     for i, item in ipairs(old_craft_grid) do
+        minetest.log("action", "Searching craft grid data: Index: "..i.." Data: "..dump(item))
         if item:get_name() == "inventory_pouches:pouch" then
+            minetest.log("action","Found inventory pouch")
             pouch = item
-        elseif string.find(item:get_name(), "^mcl_dye:") or string.find(item:get_name(), "^unifieddyes:") then
+        elseif string.find(item:get_name(), "^mcl_dye:") or string.find(item:get_name(), "^dye:") then
+            minetest.log("action", "Found Dye")
             dye = item
             dye_stack_index = i
         end
@@ -47,18 +46,25 @@ local function craft_colored_pouch(itemstack, player, old_craft_grid, craft_inv)
     if pouch and dye then
         local meta = pouch:get_meta()
         local id = meta:get_string("id")
+        minetest.log("action","ID found for pouch: "..id)
 
-        -- Use Unified Dyes API if available to set the color
+        -- Extract dye name from item name
+        local dye_name_match = dye:get_name():match(":([%w_]+)$")
+        if not dye_name_match then
+            minetest.log("error", "Dye name pattern match failed for dye: " .. dye:get_name())
+            return itemstack
+        end
+
+        -- Handle Unified Dyes
         if minetest.get_modpath("unifieddyes") then
-            local dye_name = dye:get_name():match(":(%w+)$")
-            local color_idx = unifieddyes.getpaletteidx("dye:" .. dye_name, "extended")
+            local color_idx = unifieddyes.getpaletteidx("dye:" .. dye_name_match, "extended")
             meta:set_int("palette_index", color_idx)
-        else
-            -- Use the existing dye color pairs if Unified Dyes is not used
-            local dye_name = dye:get_name():match(":(%w+)$")
+
+        -- Handle Minecraft-like dyes
+        elseif minetest.get_modpath("mcl_dye") then
             for _, dye_entry in ipairs(inventory_pouches.dye_color_pairs) do
                 local entry_dye_name, color_string = unpack(dye_entry)
-                if dye_name == entry_dye_name:match(":(%w+)$") then
+                if dye_name_match == entry_dye_name:match(":(%w+)$") then
                     meta:set_string("color", color_string)
                     break
                 end
@@ -67,6 +73,7 @@ local function craft_colored_pouch(itemstack, player, old_craft_grid, craft_inv)
 
         -- Ensure the ID is maintained
         meta:set_string("id", id)
+        minetest.log("action","ID maintained for inventory pouch ".. id)
 
         -- Remove the used dye from the crafting grid
         if dye:get_count() > 1 then
@@ -81,15 +88,11 @@ local function craft_colored_pouch(itemstack, player, old_craft_grid, craft_inv)
     end
 
     -- If no pouch or no dye, return the original itemstack
+    minetest.log("action", "Returning original itemstack")
     return itemstack
 end
 
 minetest.register_on_craft(craft_colored_pouch)
-
-
-
-
-
 
 
 
