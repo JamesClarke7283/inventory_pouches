@@ -1,4 +1,3 @@
-inventory_size = 27
 inventory_pouches.inventories = {}
 
 local function inventory_to_table(inv)
@@ -88,7 +87,7 @@ function inventory_pouches.create_pouch_inventory(itemstack)
                 inventory_pouches.update_inventory(itemstack)
             end
         })
-        inv:set_size("main", inventory_size)  -- Adjusted inventory size here
+        inv:set_size("main", inventory_pouches.inventory_size)
         inventory_pouches.inventories[id] = inv
         inventory_pouches.restore_inventory(itemstack, inv)
         inventory_pouches.update_inventory(itemstack)
@@ -118,7 +117,7 @@ function inventory_pouches.restore_all_pouches()
                     inventory_pouches.update_inventory(itemstack)
                 end
             })
-            inv:set_size("main", inventory_size)  -- Adjusted inventory size here
+            inv:set_size("main", inventory_pouches.inventory_size)  -- Adjusted inventory size here
             inventory_pouches.inventories[id] = inv
             local inv_table = minetest.deserialize(inv_table_string)
             table_to_inventory(inv_table, inv)
