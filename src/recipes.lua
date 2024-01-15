@@ -1,10 +1,10 @@
-if inventory_pouches.has_default then
+if inventory_pouches.has_default and inventory_pouches.has_farming then
     minetest.register_craft({
         output = "inventory_pouches:pouch",
         recipe = {
-            {"default:string", "default:string", "default:string"},
-            {"default:string", "default:chest", "default:string"},
-            {"default:string", "default:string", "default:string"},
+            {"farming:string", "farming:string", "farming:string"},
+            {"farming:string", "default:chest", "farming:string"},
+            {"farming:string", "farming:string", "farming:string"},
         }
     })
 elseif inventory_pouches.has_mcl_mobitems and inventory_pouches.has_mcl_chests then
