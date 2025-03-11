@@ -3,21 +3,21 @@
 
 inventory_pouches.dye_color_pairs = {}
 
-if minetest.get_modpath("mcl_dye") and minetest.get_modpath("mcl_colors") and minetest.get_modpath("mcl_signs") then
+if minetest.get_modpath("mcl_dyes") and minetest.get_modpath("mcl_colors") and minetest.get_modpath("mcl_signs") then
 inventory_pouches.dye_color_pairs = {
 {"mcl_dye:black",mcl_colors.BLACK},
 {"mcl_dye:blue",mcl_colors.BLUE},
 {"mcl_dye:brown","#57392b"},
-{"mcl_dye:cyan",mcl_signs.mcl_wool_colors.unicolor_cyan},
+{"mcl_dye:cyan",mcl_dyes.colors["cyan"].rgb},
 {"mcl_dye:green",mcl_colors.GREEN},
 {"mcl_dye:dark_green",mcl_colors.DARK_GREEN},
 {"mcl_dye:grey",mcl_colors.GRAY},
 {"mcl_dye:dark_grey",mcl_colors.DARK_GRAY},
-{"mcl_dye:lightblue",mcl_signs.mcl_wool_colors.unicolor_light_blue},
+{"mcl_dye:lightblue",mcl_dyes.colors["light_blue"].rgb},
 {"mcl_dye:magenta",mcl_colors.LIGHT_PURPLE},
-{"mcl_dye:orange",mcl_signs.mcl_wool_colors.unicolor_orange},
-{"mcl_dye:pink",mcl_signs.mcl_wool_colors.unicolor_light_red_pink},
-{"mcl_dye:red",mcl_signs.mcl_wool_colors.unicolor_red},
+{"mcl_dye:orange",mcl_dyes.colors["orange"].rgb},
+{"mcl_dye:pink",mcl_dyes.colors["pink"].rgb},
+{"mcl_dye:red",mcl_dyes.colors["red"].rgb},
 {"mcl_dye:violet",mcl_colors.DARK_PURPLE},
 {"mcl_dye:white",mcl_colors.WHITE},
 {"mcl_dye:yellow",mcl_colors.YELLOW},

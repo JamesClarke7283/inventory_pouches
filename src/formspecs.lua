@@ -44,7 +44,7 @@ function inventory_pouches.formspec.standard_pouch(id)
         pouch_inv,
         player_inv,
         hotbar,
-        "listring[detached:pouch_inventory" .. id .. ";main]",
+        "listring[detached:pouch_inventory_" .. id .. ";main]",
         "listring[current_player;main]",
       }
     end

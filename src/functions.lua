@@ -14,7 +14,8 @@ local function inventory_to_table(inv)
 end
 
 local function table_to_inventory(inv_table, inv)
-    for i, stack_table in ipairs(inv_table) do
+    --core.log("info","[ip:table_to_inventory] got table " .. tprint(inv_table))
+    for i, stack_table in pairs(inv_table) do
         inv:set_stack("main", i, ItemStack(stack_table))
         minetest.log("verbose", "[inventory_pouches] Added stack to inventory: " .. minetest.serialize(stack_table))
     end
@@ -98,6 +99,76 @@ function inventory_pouches.create_pouch_inventory(itemstack)
     return inv
 end
 
+function inventory_pouches.get_pouches_for_users()
+    local name, inv_list, inv_size, meta, id, inv, count, lists, ilist
+    for i, player in ipairs(minetest.get_connected_players()) do
+        name = player:get_player_name()
+        inv_list = player:get_inventory():get_list("main")
+        for _, itemstack in ipairs(inv_list) do
+            if itemstack:get_name() == "inventory_pouches:pouch" then
+                meta = itemstack:get_meta()
+                id = meta:get_string("id")
+                inv = inventory_pouches.inventories[id]
+                inventory_pouches.dump_inv(inv, id, name)
+            end
+        end
+    end
+end
+
+function inventory_pouches.get_pouches()
+    local highest_id = tonumber(inventory_pouches.storage:get_string("highest_id")) or 0
+    local inv
+    for id = 1, highest_id do
+        inv = inventory_pouches.inventories[id]
+        inventory_pouches.dump_inv(inv, id)
+    end
+end
+
+function inventory_pouches.dump_inv(inv, id, name)
+    local stackname, stack
+    if id == nil then id = -1 end
+    if name == nil then name = "[unspecified]" end
+    if inv == nil then else
+        local lists = inv:get_lists()
+        local count = 0
+        local inv_size = inv:get_size("main")
+        for j = 0,inv_size do
+            stack = inv:get_stack("main", j)
+            stackname = stack:get_name()
+            if stackname == nil or stackname == '' then else
+                count = count + 1
+            end
+        end
+        local message = "pouch " .. id .. " for user " .. name .. " has " .. count .. "/" .. inv_size .. " slots used"
+        minetest.log("info", message)
+    end
+end
+
+-- https://stackoverflow.com/a/41943392
+function tprint (tbl, indent)
+    if not indent then indent = 0 end
+    local toprint = string.rep(" ", indent) .. "{\r\n"
+    indent = indent + 2
+    for k, v in pairs(tbl) do
+        toprint = toprint .. string.rep(" ", indent)
+        if (type(k) == "number") then
+            toprint = toprint .. "[" .. k .. "] = "
+        elseif (type(k) == "string") then
+            toprint = toprint  .. k ..  "= "
+        end
+        if (type(v) == "number") then
+            toprint = toprint .. v .. ",\r\n"
+            elseif (type(v) == "string") then
+                toprint = toprint .. "\"" .. v .. "\",\r\n"
+            elseif (type(v) == "table") then
+                toprint = toprint .. tprint(v, indent + 2) .. ",\r\n"
+        else
+        toprint = toprint .. "\"" .. tostring(v) .. "\",\r\n"
+        end
+    end
+    toprint = toprint .. string.rep(" ", indent-2) .. "}"
+    return toprint
+end
 
 function inventory_pouches.restore_all_pouches()
     local highest_id = tonumber(inventory_pouches.storage:get_string("highest_id")) or 0
@@ -121,6 +192,7 @@ function inventory_pouches.restore_all_pouches()
             inventory_pouches.inventories[id] = inv
             local inv_table = minetest.deserialize(inv_table_string)
             table_to_inventory(inv_table, inv)
+            inventory_pouches.dump_inv(inv,id)
             minetest.log("verbose", "[inventory_pouches] Restored pouch inventory with ID: " .. id)
         end
     end
