@@ -40,12 +40,9 @@ minetest.register_craftitem("inventory_pouches:pouch", {
     on_secondary_use = inventory_pouches.invoke
 })
 
-if minetest.get_modpath("unifieddyes") then
-    minetest.override_item("inventory_pouches:pouch", {
-        palette = "unifieddyes_palette_extended.png",
-        groups = {ud_param2_colorable = 1},
-    })
-end
+-- Note: the pouch is dyed by overriding its per-stack inventory_image with a
+-- ^[multiply colorize (see src/coloured.lua), which works in every game, so it
+-- intentionally does NOT use a unifieddyes palette here.
 
 
 minetest.register_on_player_receive_fields(function(player, formname, fields)
