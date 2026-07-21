@@ -9,7 +9,7 @@ function inventory_pouches.formspec.standard_pouch(id)
     local formspec_height = rows + 7.5 -- Height of the formspec
 
     local padding_x = 0.375 -- Horizontal padding for alignment
-    local pouch_inv_start_y = 1 -- Starting point of the pouch inventory on the Y-axis
+    local pouch_inv_start_y = 0.75 -- Starting point of the pouch inventory on the Y-axis
     local gap = 0.75 -- Gap between the pouch and player inventories
     local player_inv_start_y = pouch_inv_start_y + (rows * 1.1) + gap -- Starting point of the player inventory on the Y-axis
     local hotbar_start_y = player_inv_start_y + 3 + gap + 0.20 -- Starting point of the hotbar on the Y-axis
